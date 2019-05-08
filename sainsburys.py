@@ -8,7 +8,7 @@ email_address = os.environ.get('email_address')
 email_password = os.environ.get('email_password')
 recipients = ['connor@connorcairns.xyz']
 
-cheap = 2.5
+cheap = 4
 flavours = []
 urls = ['https://www.sainsburys.co.uk/shop/gb/groceries/häagen-dazs-vanilla-500ml', 'https://www.sainsburys.co.uk/shop/gb/groceries/haagen-dazs-salted-caramel-500ml', "https://www.sainsburys.co.uk/shop/gb/groceries/häagen-dazs-strawberry-cheesecake-500ml", "https://www.sainsburys.co.uk/shop/gb/groceries/häagen-dazs-cookies---cream-500ml"]
 
@@ -17,18 +17,18 @@ for url in urls:
     soup = BeautifulSoup(r.text, 'html.parser')
     price = soup.find("p", class_="pricePerUnit").get_text(strip="True")
 
-    if float(price[1:4]) > cheap:
-        name = url[59:].replace("-", " ").replace("500ml", "")
+    if float(price[1:4]) < cheap:
+        name = url[59:].replace("-", " ").replace("500ml", "").replace("   ", " ")
         flavours.append(name)
 
-if len(flavours) > 1:
+if len(flavours) > 0:
     msg = EmailMessage()
     msg["Subject"] = "Haagen Bargins!"
     msg["From"] = email_address
     msg["To"] = ", ".join(recipients)
     msg.set_content(f"""Haagen Dazs is cheap!
 
-    The following flavours are cheap:
+    The following flavours are on sale:
     {flavours}
     """)
 
